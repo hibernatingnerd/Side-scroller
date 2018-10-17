@@ -19,12 +19,13 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
-    //Adding enemies object array
     private Enemy[] enemies;
 
-    //Adding 3 enemies you may increase the size
     private int enemyCount = 3;
 
+
+    //defining a boom object to display blast
+    private Boom boom;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -34,11 +35,14 @@ public class GameView extends SurfaceView implements Runnable {
         paint = new Paint();
 
 
-        //initializing enemy object array
+
         enemies = new Enemy[enemyCount];
-        for(int i=0; i<enemyCount; i++){
+        for (int i = 0; i < enemyCount; i++) {
             enemies[i] = new Enemy(context, screenX, screenY);
         }
+
+        //initializing boom object
+        boom = new Boom(context);
     }
 
     @Override
@@ -53,14 +57,24 @@ public class GameView extends SurfaceView implements Runnable {
     private void update() {
         player.update();
 
+        //setting boom outside the screen
+        boom.setX(-250);
+        boom.setY(-250);
 
-        for(int i=0; i<enemyCount; i++){
+
+
+        for (int i = 0; i < enemyCount; i++) {
             enemies[i].update(player.getSpeed());
 
             //if collision occurrs with player
             if (Rect.intersects(player.getDetectCollision(), enemies[i].getDetectCollision())) {
-                //moving enemy outside the left edge
+
+                //displaying boom at that location
+                boom.setX(enemies[i].getX());
+                boom.setY(enemies[i].getY());
+
                 enemies[i].setX(-200);
+
             }
         }
     }
@@ -70,6 +84,7 @@ public class GameView extends SurfaceView implements Runnable {
             canvas = surfaceHolder.lockCanvas();
             canvas.drawColor(Color.BLACK);
 
+            paint.setColor(Color.WHITE);
 
 
             canvas.drawBitmap(
@@ -78,7 +93,6 @@ public class GameView extends SurfaceView implements Runnable {
                     player.getY(),
                     paint);
 
-            //drawing the enemies
             for (int i = 0; i < enemyCount; i++) {
                 canvas.drawBitmap(
                         enemies[i].getBitmap(),
@@ -87,6 +101,14 @@ public class GameView extends SurfaceView implements Runnable {
                         paint
                 );
             }
+
+            //drawing boom image
+            canvas.drawBitmap(
+                    boom.getBitmap(),
+                    boom.getX(),
+                    boom.getY(),
+                    paint
+            );
 
             surfaceHolder.unlockCanvasAndPost(canvas);
 
