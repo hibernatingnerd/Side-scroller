@@ -1,19 +1,18 @@
-package com.example.sidescroller;
-
-
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.widget.Toast;
+
+import com.example.sidescroller.R;
 
 import java.util.Random;
 
 /**
- * Created by Belal on 6/15/2016.
+ * Created by Jeffery campbell on 10/17/2018.
  */
-public class Enemy {
+
+public class Friend {
+
     private Bitmap bitmap;
     private int x;
     private int y;
@@ -25,29 +24,18 @@ public class Enemy {
     private int maxY;
     private int minY;
 
-    Context context;
-    Activity activity;
 
-    //creating a rect object
-    private Rect detectCollision;
-
-    public Enemy(Context context, int screenX, int screenY) {
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
+    public Friend(Context context, int screenX, int screenY) {
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.friend);
         maxX = screenX;
         maxY = screenY;
         minX = 0;
         minY = 0;
-
-        this.context = context;
-
-        activity = (Activity) context;
         Random generator = new Random();
         speed = generator.nextInt(6) + 10;
         x = screenX;
         y = generator.nextInt(maxY) - bitmap.getHeight();
 
-        //initializing rect object
-        detectCollision = new Rect(x, y, bitmap.getWidth(), bitmap.getHeight());
     }
 
     public void update(int playerSpeed) {
@@ -59,27 +47,11 @@ public class Enemy {
             x = maxX;
             y = generator.nextInt(maxY) - bitmap.getHeight();
         }
-
-
-
-        //Adding the top, left, bottom and right to the rect object
-        detectCollision.left = x;
-        detectCollision.top = y;
-        detectCollision.right = x + bitmap.getWidth();
-        detectCollision.bottom = y + bitmap.getHeight();
-
-
-    }
-
-    //adding a setter to x coordinate so that we can change it after collision
-    public void setX(int x){
-
-        this.x = x;
-
     }
 
     //one more getter for getting the rect object
     public Rect getDetectCollision() {
+        Rect detectCollision = null;
         return detectCollision;
     }
 
@@ -94,13 +66,6 @@ public class Enemy {
 
     public int getY() {
         return y;
-    }
-
-
-
-
-    public int getSpeed() {
-        return speed;
     }
 
 }
